@@ -1,0 +1,34 @@
+-- Add this script to a dummy or as a child script in CoppeliaSim
+
+local socket = require("socket")
+local udp = socket.udp()
+
+-- Bind the socket to listen on port 5000
+local port = 5000
+udp:setsockname("127.0.0.1", port)
+udp:settimeout(0)
+
+function sysCall_init()
+    print("Listening for UDP messages on port " .. port)
+end
+
+function sysCall_actuation()
+    -- Receive a UDP message
+    local data, err = udp:receive()
+    if data then
+        -- Split the received string into two integers
+        local int1, int2 = string.match(data, "(%d+),(%d+)")
+        if int1 and int2 then
+            print("Received integers:", int1, int2)
+        else
+            print("Received malformed message:", data)
+        end
+    elseif err ~= "timeout" then
+        print("Error receiving data:", err)
+    end
+end
+
+function sysCall_cleanup()
+    udp:close()
+    print("UDP socket closed.")
+end
