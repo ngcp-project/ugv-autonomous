@@ -97,13 +97,16 @@ with dai.Device(pipeline) as device:
             coords = depthData.spatialCoordinates
             distance = math.sqrt(coords.x ** 2 + coords.y ** 2 + coords.z ** 2)
             message += (str(round(distance/304.8, 3)) + ", ")
-            # print(str(round(distance/304.8, 3)) + "ft", end = ", ")
+            print(str(round(distance/304.8, 3)) + "ft", end = ", ")
 
             cv2.rectangle(depthFrameColor, (xmin, ymin), (xmax, ymax), color, thickness=2)
             cv2.putText(depthFrameColor, "{:.1f}ft".format(distance/304.8), (xmin + 10, ymin + 20), fontType, 0.6, color)
-        # Show the frame
-        # print(" ")
+
+
+        # Send message to destination socket 
         udp_socket.sendto(message.encode(), (UDP_IP, UDP_PORT))
+        print(" ")
+        message = "" # Reset message string 
         cv2.imshow("depth", depthFrameColor)
 
         if cv2.waitKey(1) == ord('q'):
