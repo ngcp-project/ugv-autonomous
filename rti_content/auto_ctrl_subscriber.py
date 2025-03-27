@@ -36,7 +36,7 @@ class auto_ctlSubscriber:
         participant = dds.DomainParticipant(domain_id)
 
         # A Topic has a name and a datatype.
-        topic = dds.Topic(participant, "Example auto_ctl", auto_ctl)
+        topic = dds.Topic(participant, "auto_ctl", auto_ctl)
 
         # This DataReader reads data on Topic "Example auto_ctl".
         # DataReader QoS is configured in USER_QOS_PROFILES.xml

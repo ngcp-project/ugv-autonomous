@@ -6,5 +6,4 @@ struct auto_ctl
 	float heading_error;  // Heading error for heading controller 
 	float object_dist[5]; //Contains 5 distance measurements from depth camera 
 	boolean obstacle_flag;   //Set when depth camera distance measurements are below a certain threshold
-
 };

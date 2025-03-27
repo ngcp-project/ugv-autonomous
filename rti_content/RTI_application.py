@@ -1,11 +1,5 @@
 import socket
 
-UDP_IP = "127.0.0.1"
-UDP_PORT = 5005
-
-udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-udp_socket.bind((UDP_IP, UDP_PORT))
-
 DISTANCE_THRESH = 10.0
 
 payload_string = ""
@@ -34,7 +28,7 @@ steering_angle = 0
 heading_error = 0.1
 
 while True:
-    data, addr = udp_socket.recvfrom(1024)
+    data, addr = host_sock.recvfrom(1024)
     payload = data.decode() # Convert Byte array to python string type 
     payload = payload.split(",")  # Parse string using comma delimiter
     resized_payload = payload[2:7] # Only take the middle 5 elements of the list [2, 7)

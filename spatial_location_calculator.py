@@ -104,7 +104,7 @@ with dai.Device(pipeline) as device:
 
 
         # Send message to destination socket 
-        udp_socket.sendto(message.encode(), (UDP_IP, UDP_PORT))
+        udp_socket.sendto(message.encode(), (UDP_IP, 11111))
         print(" ")
         message = "" # Reset message string 
         cv2.imshow("depth", depthFrameColor)
