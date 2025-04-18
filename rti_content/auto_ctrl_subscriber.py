@@ -13,6 +13,34 @@ import time
 import sys
 import rti.connextdds as dds
 from auto_ctrl import auto_ctl
+import socket
+
+DISTANCE_THRESH = 10.0 #10 Ft distance threshold 
+
+payload_string = ""
+obstacle_flag = 0
+auto_enable = 0
+
+""" temporary Socket Setup before RTI stuff is fleshed out """
+host_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+host_add = "localhost"
+host_port = 11112
+host_sock.bind((host_add, host_port))
+
+## UDP setup to Tx data to nucelo 
+server_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+# Bind the server to an IP and port (localhost and port 12345 in this case)
+server_address = ('127.0.0.1', 12345)  # Replace with your server's IP
+server_socket.bind(server_address)
+
+# Define the known client IP and port
+drive_nucelo_ip = '192.168.20.21'
+drive_nucelo_port = 8   
+
+velocity_val = 0.5
+steering_angle = 0
+heading_error = 0.1
 
 class auto_ctlSubscriber:
 
@@ -23,8 +51,22 @@ class auto_ctlSubscriber:
         # To not remove the data from the reader, use read_data() or read().
         samples = reader.take_data()
         for sample in samples:
-            print(f"Received: {sample}")
-    
+            payload_float_list = [round(float(measure),3) for measure in sample.object_dist]
+            print(payload_float_list)
+# 
+            # If any value is below the distance threshold set obstacle_flag 
+            if any(measure <= DISTANCE_THRESH for measure in payload_float_list):
+                obstacle_flag = 1
+            else:
+                obstacle_flag = 0
+
+            udp_payload = f"{velocity_val}, {steering_angle}, {heading_error}, {payload_float_list[0]}, \
+                            {payload_float_list[1]}, {payload_float_list[2]}, {payload_float_list[3]}, {payload_float_list[4]}, {auto_enable}, {obstacle_flag}".encode()
+            server_socket.sendto(udp_payload, (drive_nucelo_ip, drive_nucelo_port))
+
+            payload_string = " ".join(sample.object_dist)  # & convert the returned list to string
+            
+            print(payload_string, obstacle_flag)
         return len(samples)
 
     @staticmethod
