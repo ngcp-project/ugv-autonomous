@@ -52,8 +52,9 @@ class auto_ctlSubscriber:
         samples = reader.take_data()
         for sample in samples:
             payload_float_list = [round(float(measure),3) for measure in sample.object_dist]
+            payload_string_list = [str(round(float(measure),3)) for measure in sample.object_dist]
             print(payload_float_list)
-# 
+
             # If any value is below the distance threshold set obstacle_flag 
             if any(measure <= DISTANCE_THRESH for measure in payload_float_list):
                 obstacle_flag = 1
@@ -64,7 +65,7 @@ class auto_ctlSubscriber:
                             {payload_float_list[1]}, {payload_float_list[2]}, {payload_float_list[3]}, {payload_float_list[4]}, {auto_enable}, {obstacle_flag}".encode()
             server_socket.sendto(udp_payload, (drive_nucelo_ip, drive_nucelo_port))
 
-            payload_string = " ".join(sample.object_dist)  # & convert the returned list to string
+            payload_string = " ".join(payload_string_list)  # & convert the returned list to string
             
             print(payload_string, obstacle_flag)
         return len(samples)
