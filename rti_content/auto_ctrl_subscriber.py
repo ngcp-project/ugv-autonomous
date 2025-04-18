@@ -31,7 +31,7 @@ host_sock.bind((host_add, host_port))
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 # Bind the server to an IP and port (localhost and port 12345 in this case)
-server_address = ('127.0.0.1', 12345)  # Replace with your server's IP
+server_address = ('192.168.20.5', 12345)  # Replace with your server's IP
 server_socket.bind(server_address)
 
 # Define the known client IP and port
