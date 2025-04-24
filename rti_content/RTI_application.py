@@ -25,7 +25,7 @@ drive_nucelo_port = 8
 
 velocity_val = 0.5
 steering_angle = 0
-heading_error = 0.1
+heading_error = 0.0
 
 while True:
     data, addr = host_sock.recvfrom(1024)
